@@ -29,7 +29,22 @@ double timespec_delta2milliseconds(struct timespec *last,
      ***/
 
     /*** TO BE DONE START ***/
+    // Calcola la differenza in secondi.
+    long delta_sec = last->tv_sec - previous->tv_sec;
 
+    // Calcola la differenza in nanosecondi.
+    long delta_nsec = last->tv_nsec - previous->tv_nsec;
+
+    // Se la differenza dei nanosecondi è negativa, è necessario "prendere in
+    // prestito" un secondo dal contatore dei secondi.
+    if (delta_nsec < 0) {
+        delta_sec--;
+        delta_nsec += 1000000000L; // 1 secondo = 1,000,000,000 nanosecondi
+    }
+
+    // Converte la differenza totale (secondi + nanosecondi) in millisecondi.
+    // Il casting a (double) assicura che il calcolo sia in virgola mobile.
+    return (double)delta_sec * 1000.0 + (double)delta_nsec / 1000000.0;
     /*** TO BE DONE END ***/
 }
 

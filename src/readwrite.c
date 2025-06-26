@@ -1,7 +1,7 @@
 /*
  * readwrite.c: funzioni ausiliarie per il ping-pong
  *
- * versione 24.1 
+ * versione 24.1
  *
  * Programma sviluppato a supporto del laboratorio di
  * Sistemi di Elaborazione e Trasmissione del corso di laurea
@@ -18,75 +18,78 @@
  * (at your option) any later version.
  */
 
-#include <stdlib.h>
 #include "pingpong.h"
+#include <stdlib.h>
 
-/* read_all and write_all, inspired by readn and writen of the 
+/* read_all and write_all, inspired by readn and writen of the
    book "Advanced Programming in the UNIX Environment" */
 
-ssize_t read_all(int fd, void *ptr, size_t n)
-{
-	size_t n_left = n;
-	while (n_left > 0) {
-		ssize_t n_read = read(fd, ptr, n_left);
-		if (n_read < 0) {
-			if (n_left == n)
-				return -1; /* nothing has been read */
-			else
-				break; /* we have read something */
-		} else if (n_read == 0) {
-			break; /* EOF */
-		}
-		n_left -= n_read;
-		ptr += n_read;
-	}
-	assert(n - n_left >= 0);
-	return n - n_left;
+ssize_t read_all(int fd, void *ptr, size_t n) {
+    size_t n_left = n;
+    while (n_left > 0) {
+        ssize_t n_read = read(fd, ptr, n_left);
+        if (n_read < 0) {
+            if (n_left == n)
+                return -1; /* nothing has been read */
+            else
+                break; /* we have read something */
+        } else if (n_read == 0) {
+            break; /* EOF */
+        }
+        n_left -= n_read;
+        ptr += n_read;
+    }
+    assert(n - n_left >= 0);
+    return n - n_left;
 }
 
-ssize_t blocking_write_all(int fd, const void *ptr, size_t n)
-{
-	size_t n_left = n;
-	while (n_left > 0) {
-		ssize_t n_written = write(fd, ptr, n_left);
-		if (n_written < 0) {
-			if (n_left == n)
-				return -1; /* nothing has been written */
-			else
-				break; /* we have written something */
-		} else if (n_written == 0) {
-			break;
-		}
-		n_left -= n_written;
-		ptr += n_written;
-	}
-	assert(n - n_left >= 0);
-	return n - n_left;
+ssize_t blocking_write_all(int fd, const void *ptr, size_t n) {
+    size_t n_left = n;
+    while (n_left > 0) {
+        ssize_t n_written = write(fd, ptr, n_left);
+        if (n_written < 0) {
+            if (n_left == n)
+                return -1; /* nothing has been written */
+            else
+                break; /* we have written something */
+        } else if (n_written == 0) {
+            break;
+        }
+        n_left -= n_written;
+        ptr += n_written;
+    }
+    assert(n - n_left >= 0);
+    return n - n_left;
 }
 
-ssize_t nonblocking_write_all(int fd, const void *ptr, size_t n)
-{
-	size_t n_left = n;
-	while (n_left > 0) {
-		ssize_t n_written = write(fd, ptr, n_left);
-		if (n_written < 0) {
+ssize_t nonblocking_write_all(int fd, const void *ptr, size_t n) {
+    size_t n_left = n;
+    while (n_left > 0) {
+        ssize_t n_written = write(fd, ptr, n_left);
+        if (n_written < 0) {
 
-/*** TO BE DONE START ***/
+            /*** TO BE DONE START ***/
 
+            // Controlla se l'errore è dovuto al fatto che l'operazione sarebbe
+            // bloccante.
+            // EAGAIN e EWOULDBLOCK sono codici di errore "temporanei" per I/O
+            // non bloccante.
+            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                // Non è un errore fatale. Semplicemente, il buffer è pieno.
+                break;
+            }
+            /*** TO BE DONE END ***/
 
-/*** TO BE DONE END ***/
-
-			if (n_left == n)
-				return -1; /* nothing has been written */
-			else
-				break; /* we have written something */
-		} else if (n_written == 0) {
-			break;
-		}
-		n_left -= n_written;
-		ptr += n_written;
-	}
-	assert(n - n_left >= 0);
-	return n - n_left;
+            if (n_left == n)
+                return -1; /* nothing has been written */
+            else
+                break; /* we have written something */
+        } else if (n_written == 0) {
+            break;
+        }
+        n_left -= n_written;
+        ptr += n_written;
+    }
+    assert(n - n_left >= 0);
+    return n - n_left;
 }
-
