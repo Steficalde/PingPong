@@ -15,6 +15,18 @@ LastN=${TailLine[0]}
 
 # TO BE DONE START
 
+FirstParam=$1
+
+ThroughFirst=${HeadLine[1]}
+ThroughLast=${TailLine[1]}
+
+DelayFirst=$(echo "$FirstN / $ThroughFirst" | bc -l)
+DelayLast=$(echo "$LastN / $ThroughLast" | bc -l)
+
+
+Band=$(echo "($LastN - $FirstN) / ($DelayLast - $DelayFirst)" | bc -l)
+Latency=$(echo "($DelayFirst * $LastN - $DelayLast * $FirstN) / ($LastN - $FirstN)" | bc -l)
+
 
 # TO BE DONE END
 
@@ -31,7 +43,8 @@ gnuplot <<-eNDgNUPLOTcOMMAND
   lbmodel(x)= x / ($Latency + (x/$Band))
 
 # TO BE DONE START
-
+ plot "${ThroughFile}" using 1:2 title "median Throughput" with linespoints, \
+       lbmodel(x) title "${FirstParam} Latency-Bandwidth Model with L=${Latency} and B=${Band}" with linespoints
 # TO BE DONE END
 
   clear
