@@ -69,14 +69,8 @@ ssize_t nonblocking_write_all(int fd, const void *ptr, size_t n) {
         if (n_written < 0) {
 
             /*** TO BE DONE START ***/
-
-            // Controlla se l'errore è dovuto al fatto che l'operazione sarebbe
-            // bloccante.
-            // EAGAIN e EWOULDBLOCK sono codici di errore "temporanei" per I/O
-            // non bloccante.
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                // Non è un errore fatale. Semplicemente, il buffer è pieno.
-                break;
+                continue;
             }
             /*** TO BE DONE END ***/
 

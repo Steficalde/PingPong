@@ -55,9 +55,10 @@ double do_ping(size_t msg_size, int msg_no, char message[msg_size],
 
         /*** Send the message through the socket ***/
         /*** TO BE DONE START ***/
-        sent_bytes = send(ping_socket, message, msg_size, 0);
-        if (sent_bytes < 0) {
-            fail_errno("Error sending data");
+        sent_bytes = nonblocking_write_all(ping_socket, message, msg_size);
+
+        if (sent_bytes < 0 || sent_bytes != msg_size) {
+            fail_errno("UDP Ping: nonblocking_write_all failed");
         }
         /*** TO BE DONE END ***/
 

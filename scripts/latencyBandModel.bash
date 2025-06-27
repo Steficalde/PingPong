@@ -43,6 +43,7 @@ gnuplot <<-eNDgNUPLOTcOMMAND
   lbmodel(x)= x / ($Latency + (x/$Band))
 
 # TO BE DONE START
+ set key out above
  plot "${ThroughFile}" using 1:2 title "median Throughput" with linespoints, \
        lbmodel(x) title "${FirstParam} Latency-Bandwidth Model with L=${Latency} and B=${Band}" with linespoints
 # TO BE DONE END
