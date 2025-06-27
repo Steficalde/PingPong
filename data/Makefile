@@ -1,4 +1,4 @@
-PINGPONGADDR=192.168.1.51
+PINGPONGADDR=seti.dibris.unige.it
 PINGPONGPORT=1491
 TCP_EXE=../bin/tcp_ping
 UDP_EXE=../bin/udp_ping
